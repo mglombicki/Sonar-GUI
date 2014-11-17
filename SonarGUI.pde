@@ -5,15 +5,16 @@
 
     The UI code expects serial data to be sent
     as a string in the format: angle,value
-    For example, "120,2500" corresponds to an angle
-    of 120 degrees and a range of 25 cm.
+    Units are radians and hundreds of centimeters.
+    For example, "1.4,2500" corresponds to an angle
+    of 80.2 degrees and a range of 25 cm.
 *************************************************/
 
 import processing.serial.*;
 
 int PORT_NUMBER = 0; // This will vary by USB port used
 float MAX_RANGE = 35; // in centimeters
-float OFFSET = PI / 2; // Used to make the radar top be 0 degrees
+float OFFSET = PI / 2; // Used to set 0 degrees as the top of the radar
 int POINT_COUNT = 100;
 
 Serial myPort; // The serial port
@@ -27,7 +28,7 @@ int counter = 0;
 
 void setup()
 {
-    // set the window size:
+    // Set the window size:
     size(600, 500);
     centerX = width / 2;
     centerY = height / 2;
@@ -56,8 +57,8 @@ void serialEvent(Serial myPort)
     // Get the string message sent from the device:
     String reading = myPort.readStringUntil('\n');
     String[] parts = reading.split(",");
-    float angle = float(parts[0]) / (180 / PI);
-    float range = float(parts[1].replaceAll("(\\r|\\n)", "")) / 100; // converts to cm
+    float angle = float(parts[0]) / (180 / PI); // Converts to degrees
+    float range = float(parts[1].replaceAll("(\\r|\\n)", "")) / 100; // Converts to cm
 
     // Draw the radar screen
     background(200);
